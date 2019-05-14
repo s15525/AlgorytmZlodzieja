@@ -95,29 +95,30 @@ public class Thief {
     private void forceMetod(){
         List<String> pom = data;
 
-        printCombination(data,data.size(),5);
+        printCombination(data,data.size());
     }
 
     static void combinationUtil(List<String> arr, String data[], int start,
-                                int end, int index, int r)
+                                int end, int index,int sumThief)
     {
-        if (index == r)
+        if (sumThief >= 40)
         {
-            for (int j=0; j<r; j++)
+            for (int j=0; j<data.length; j++)
                 System.out.print(data[j]+" ");
             System.out.println("");
             return;
         }
-        for (int i=start; i<=end && end-i+1 >= r-index; i++)
+        for (int i=start; i<=end && end-i+1 >= index; i++)
         {
             data[index] = arr.get(i);
-            combinationUtil(arr, data, i+1, end, index+1, r);
+            sumThief += Integer.parseInt(arr.get(i).split("/")[1]);
+            combinationUtil(arr, data, i+1, end, index+1 , sumThief);
         }
     }
-    static void printCombination(List<String> arr, int n, int r)
+    static void printCombination(List<String> arr, int n)
     {
-        String data[]=new String[r];
-        combinationUtil(arr, data, 0, n-1, 0, r);
+        String data[]=new String[8];
+        combinationUtil(arr, data, 0, n-1, 0,0);
     }
 }
 
