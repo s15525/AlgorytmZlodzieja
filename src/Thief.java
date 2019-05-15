@@ -4,6 +4,8 @@ import java.util.List;
 public class Thief {
     int capacity = 40;
     List<String> data;
+    static List<List<String>> result = new LinkedList<>();
+
 
     public Thief(List<String> data) {
         this.data = data;
@@ -11,25 +13,9 @@ public class Thief {
     }
 
     private void ThiefSomething() {
-
-        int n = 0;
-        String sum = "";
-//        strategy1();
-//        strategy2();
         forceMetod();
-//        for (int i = 0; i <= data.size()-1; i++) {
-//            String element = data.get(i);
-//            String[] split = element.split("/");
-//            if (SumThief + Integer.parseInt(split[1]) <= capacity) {
-//                sum += " " + element;
-//                SumThief = SumThief + Integer.parseInt(split[1]);
-//            } else {
-//                System.out.println("Plecak: " + n + "{ " + sum + " } ");
-//                n++;
-//                sum = "";
-//                SumThief = 0;
-//            }
-        }
+        System.out.println(findMax(result));
+    }
 
     private String strategy1() {
         String result = "";
@@ -37,22 +23,22 @@ public class Thief {
         List<String> maxValuesThings = new LinkedList<>();
         int sumThief = 0;
 
-        while(sumThief < capacity){
+        while (sumThief < capacity) {
             String elementPomMax = "";
             int max = 0;
             int size = 0;
-            for (String element: pom) {
+            for (String element : pom) {
                 String[] split = element.split("/");
-                if (max < Integer.parseInt(split[0])){
+                if (max < Integer.parseInt(split[0])) {
                     size = Integer.parseInt(split[1]);
                     max = Integer.parseInt(split[0]);
                     elementPomMax = element;
                 }
             }
-            if (sumThief + size >= capacity){
+            if (sumThief + size >= capacity) {
                 System.out.println(maxValuesThings);
                 break;
-            }else {
+            } else {
                 maxValuesThings.add(elementPomMax);
                 pom.remove(elementPomMax);
                 sumThief += size;
@@ -79,10 +65,10 @@ public class Thief {
                 }
             }
 
-            if (sumThief + min >= capacity){
+            if (sumThief + min >= capacity) {
                 System.out.println(minSizeThings);
                 break;
-            }else {
+            } else {
                 minSizeThings.add(elementPomMin);
                 pom.remove(elementPomMin);
                 sumThief += min;
@@ -92,33 +78,51 @@ public class Thief {
         return result;
     }
 
-    private void forceMetod(){
+    private void forceMetod() {
         List<String> pom = data;
-
-        printCombination(data,data.size());
+        printCombination(data, data.size());
     }
 
     static void combinationUtil(List<String> arr, String data[], int start,
-                                int end, int index,int sumThief)
-    {
-        if (sumThief >= 40)
-        {
-            for (int j=0; j<data.length; j++)
-                System.out.print(data[j]+" ");
-            System.out.println("");
+                                int end, int index, int sumThief) {
+        if (sumThief >= 40) {
+            List<String> pom = new LinkedList<>();
+            for (int i = 0 ; i < data.length-1 ; i++){
+                pom.add(data[i]);
+            }
+            result.add(pom);
             return;
         }
-        for (int i=start; i<=end && end-i+1 >= index; i++)
-        {
+        for (int i = start; i <= end && end - i + 1 >= index; i++) {
             data[index] = arr.get(i);
             sumThief += Integer.parseInt(arr.get(i).split("/")[1]);
-            combinationUtil(arr, data, i+1, end, index+1 , sumThief);
+            combinationUtil(arr, data, i + 1, end, index + 1, sumThief);
         }
     }
-    static void printCombination(List<String> arr, int n)
-    {
-        String data[]=new String[8];
-        combinationUtil(arr, data, 0, n-1, 0,0);
+
+    static void printCombination(List<String> arr, int n) {
+        String data[] = new String[8];
+        combinationUtil(arr, data, 0, n - 1, 0, 0);
+    }
+
+    String findMax(List<List<String>> arr){
+        List<String> result = null;
+        int max = 0;
+        for (List<String> pom:
+             arr) {
+            int valuesBagpack = 0;
+            for (String element:
+                 pom) {
+                valuesBagpack += Integer.parseInt(element.split("/")[0]);
+            }
+            if (valuesBagpack > max){
+                result = pom;
+                max = valuesBagpack;
+            }
+        }
+
+
+        return result.toString() + " " + max;
     }
 }
 
